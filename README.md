@@ -5,15 +5,6 @@ Efficiency of Deep Spiking Neural Networks through Rate-based Backpropagation**"
 
 <img src="doc/figure/fig1.png" alt="introduction_figure" style="zoom:100%;" />
 
-
-
-<!-- | TimeStep | CIFAR-10 |  CIFAR-10   |      | CIFAR-100 |  CIFAR-100  |
-|:--------:|:--------:|:-----------:|:----:|:---------:|:-----------:|
-|          |   BPTT   | **Rate-BP** |      |   BPTT    | **Rate-BP** |
-|    2     |  94.93   |  **94.75**  |      |   77.09   |  **75.97**  |
-|    4     |  95.64   |  **95.61**  |      |   77.93   |  **78.26**  |
-|    6     |  96.03   |  **95.90**  |      |   78.35   |  **79.02**  | -->
-
 ## Dependencies
 
 ```
@@ -41,7 +32,10 @@ spikingjelly            0.0.0.0.14
 │       └── main.py
 ├── model
 │   ├── layer.py
+│   ├── model_setting.py
+│   ├── preact_resnet.py
 │   ├── resnet.py
+│   ├── sew_resnet.py
 │   └── vgg.py
 └── util
     ├── data.py
@@ -98,7 +92,7 @@ The computational graph using rate-based gradients is implemented via model hook
 
 3. Options for Hyper-Parameters:
     - `--arch`: corresponding SNN models, supporting:
-        resnet18, resnet19, vgg11, vgg13, vggsnn_cifar, vggsnn_dvs
+        resnet18, resnet19, vgg11, vgg13, vggsnn_cifar, vggsnn_dvs, sew_resnet34, preact_resnet34
     - `--T`: Specifies the number of timesteps for the SNN model. Fixed as 10 on CIFAR10-DVS.
     - `--step_mode`: Specifies the training mode.
         - m: Multi-step training mode, where T loops are embedded within layers.
