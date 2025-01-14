@@ -1,4 +1,4 @@
-# Rate-based Backpropagation
+# Advancing Training Efficiency of Deep Spiking Neural Networks through Rate-based Backpropagation
 
 This repository hosts the code implementation of the rate-based backpropagation detailed in paper, "**Advancing Training
 Efficiency of Deep Spiking Neural Networks through Rate-based Backpropagation**", accepted at NeurIPS 2024. [[arXiv](https://arxiv.org/abs/2410.11488)][[OpenReview](https://openreview.net/forum?id=wlcm21C4nk)]
@@ -6,6 +6,13 @@ Efficiency of Deep Spiking Neural Networks through Rate-based Backpropagation**"
 <img src="doc/figure/fig1.png" alt="introduction_figure" style="zoom:100%;" />
 
 
+
+<!-- | TimeStep | CIFAR-10 |  CIFAR-10   |      | CIFAR-100 |  CIFAR-100  |
+|:--------:|:--------:|:-----------:|:----:|:---------:|:-----------:|
+|          |   BPTT   | **Rate-BP** |      |   BPTT    | **Rate-BP** |
+|    2     |  94.93   |  **94.75**  |      |   77.09   |  **75.97**  |
+|    4     |  95.64   |  **95.61**  |      |   77.93   |  **78.26**  |
+|    6     |  96.03   |  **95.90**  |      |   78.35   |  **79.02**  | -->
 
 ## Dependencies
 
@@ -26,7 +33,10 @@ spikingjelly            0.0.0.0.14
 │   ├── cifar
 │   │   ├── config
 │   │   └── main.py
-│   └── dvs
+│   ├── dvs
+│   │   ├── config
+│   │   └── main.py
+│   └── imagenet
 │       ├── config
 │       └── main.py
 ├── model
@@ -54,12 +64,16 @@ The computational graph using rate-based gradients is implemented via model hook
     python experiment/cifar/main.py --dataset CIFAR10 --data_path [data_path] --arch resnet18 --T 4 --step_mode m
     # for CIFAR10-DVS
     python experiment/dvs/main.py --dataset CIFAR10_DVS_Aug --data_path [data_path] --arch vggsnn_dvs --step_mode m
+    # for ImageNet
+    python experiment/imagent/main.py --dataset imagenet --data_path [data_path] --arch sew_resnet34 --T 4 --step_mode m
 
     ##### BPTT with single-step #####
     # for CIFAR-10/100
     python experiment/cifar/main.py --dataset CIFAR10 --data_path [data_path] --arch resnet18 --T 4 --step_mode s
     # for CIFAR10-DVS
     python experiment/dvs/main.py --dataset CIFAR10_DVS_Aug --data_path [data_path] --arch vggsnn_dvs --step_mode s
+    # for ImageNet
+    python experiment/imagent/main.py --dataset imagenet --data_path [data_path] --arch sew_resnet34 --T 4 --step_mode s
     ```
 
 2. __Using Rate-Based Backpropagation__. To enable rate-based backpropagation as a replacement for BPTT, use the following commands:
@@ -70,17 +84,21 @@ The computational graph using rate-based gradients is implemented via model hook
     python experiment/cifar/main.py --dataset CIFAR10 --data_path [data_path] --arch resnet18 --T 4 --step_mode m --rate_flag
     # for CIFAR10-DVS
     python experiment/dvs/main.py --dataset CIFAR10_DVS_Aug --data_path [data_path] --arch vggsnn_dvs --step_mode m --rate_flag
+    # for ImageNet
+    python experiment/imagenet/main.py --dataset imagenet --data_path [data_path] --arch sew_resnet34 --T 4 --step_mode m --rate_flag
 
     ##### Rate-BP with single-step #####
     # for CIFAR-10/100
     python experiment/cifar/main.py --dataset CIFAR10 --data_path [data_path] --arch resnet18 --T 4 --step_mode s --rate_flag
     # for CIFAR10-DVS
     python experiment/dvs/main.py --dataset CIFAR10_DVS_Aug --data_path [data_path] --arch vggsnn_dvs --step_mode s --rate_flag
+    # for ImageNet
+    python experiment/imagenet/main.py --dataset imagenet --data_path [data_path] --arch sew_resnet34 --T 4 --step_mode s --rate_flag
     ```
 
 3. Options for Hyper-Parameters:
     - `--arch`: corresponding SNN models, supporting:
-        resnet18, resnet19, vggsnn_cifar, vggsnn_dvs
+        resnet18, resnet19, vgg11, vgg13, vggsnn_cifar, vggsnn_dvs
     - `--T`: Specifies the number of timesteps for the SNN model. Fixed as 10 on CIFAR10-DVS.
     - `--step_mode`: Specifies the training mode.
         - m: Multi-step training mode, where T loops are embedded within layers.

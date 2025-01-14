@@ -5,7 +5,7 @@ from torchvision import datasets, transforms
 from .image_augment import CIFAR10Policy, Cutout
 
 
-class CIFAR10_DVS_Aug(torch.utils.data.Dataset):
+class CIFAR10_DVS_AUG(torch.utils.data.Dataset):
     def __init__(self, root, train=True, transform=None, target_transform=None):
         self.root = os.path.expanduser(root)
         self.transform = transform
@@ -46,6 +46,7 @@ class CIFAR10_DVS_Aug(torch.utils.data.Dataset):
 def load_dataset(name, root, cutout=False, auto_aug=False):
     num_class, normalize, train_data, test_data = None, None, None, None
     train_transform = []
+    name = name.upper() if name is not None else ''
     if name == 'CIFAR10' or name == 'CIFAR100':
         train_transform = [transforms.RandomCrop(32, padding=4), transforms.RandomHorizontalFlip()]
     if auto_aug:
@@ -82,11 +83,35 @@ def load_dataset(name, root, cutout=False, auto_aug=False):
                                     transform=train_transform)
         val_data = datasets.MNIST(root=root, train=False, download=True,
                                   transform=val_transform)
-    elif name == 'CIFAR10_DVS_Aug':
+    elif name == 'IMAGENET':
+        num_class = 1000
+
+        traindir = os.path.join(root, 'train')
+        valdir = os.path.join(root, 'val')
+        normalize = transforms.Normalize(mean=[0.485, 0.456, 0.406],
+                                         std=[0.229, 0.224, 0.225])
+
+        transform_train = transforms.Compose([
+            transforms.RandomResizedCrop(224),
+            transforms.RandomHorizontalFlip(),
+            transforms.ToTensor(),
+            normalize,
+        ])
+
+        transform_test = transforms.Compose([
+            transforms.Resize(256),
+            transforms.CenterCrop(224),
+            transforms.ToTensor(),
+            normalize,
+        ])
+
+        train_data = datasets.ImageFolder(root=traindir, transform=transform_train)
+        val_data = datasets.ImageFolder(root=valdir, transform=transform_test)
+    elif name == 'CIFAR10_DVS_AUG':
         train_path = root + '/train'
         val_path = root + '/test'
-        train_data = CIFAR10_DVS_Aug(root=train_path, transform=False)
-        val_data = CIFAR10_DVS_Aug(root=val_path)
+        train_data = CIFAR10_DVS_AUG(root=train_path, transform=False)
+        val_data = CIFAR10_DVS_AUG(root=val_path)
         num_class = 10
     else:
         raise NotImplementedError()

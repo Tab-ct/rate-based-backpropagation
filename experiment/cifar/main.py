@@ -12,8 +12,8 @@ import os
 import torch.optim as optim
 from torch.utils.data import DataLoader
 from torch.utils.tensorboard import SummaryWriter
-from util import Logger, Bar, AverageMeter, accuracy, load_dataset, warp_decay, split_params, init_config, \
-    rate_model_setting, bptt_model_setting
+from util import Logger, Bar, AverageMeter, accuracy, load_dataset, warp_decay, split_params, init_config
+from model.model_setting import rate_model_setting, bptt_model_setting
 from spikingjelly.activation_based import functional
 
 
