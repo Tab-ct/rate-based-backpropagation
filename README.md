@@ -92,7 +92,9 @@ The computational graph using rate-based gradients is implemented via model hook
 
 3. Options for Hyper-Parameters:
     - `--arch`: corresponding SNN models, supporting:
-        resnet18, resnet19, vgg11, vgg13, vggsnn_cifar, vggsnn_dvs, sew_resnet34, preact_resnet34
+        - CIFAR-10/100: resnet18, resnet19, vgg11, vgg13, vggsnn_cifar
+        - CIFAR10-DVS: vggsnn_dvs
+        - ImageNet: sew_resnet34, preact_resnet34
     - `--T`: Specifies the number of timesteps for the SNN model. Fixed as 10 on CIFAR10-DVS.
     - `--step_mode`: Specifies the training mode.
         - m: Multi-step training mode, where T loops are embedded within layers.
